@@ -17,38 +17,45 @@ mongoose.connect('mongodb://localhost:27017/museum', {
 });
 
 // Create a scheme for items in database
-const itemSchema = new mongoose.Schema({
-    //TODO: Define schema for new site
+const passageSchema = new mongoose.Schema({
     title: String,
-    description: String,
-    path: String,
+    passage: String,
+    contributer: String,
 });
 
-// Create a model for items in the museum.
-const Item = mongoose.model('Item', itemSchema);
+// Create a scheme for comments in database
+const commentSchema = new mongoose.Schema({
+    name: String,
+    comment: String,
+    passageId: String, //objectID of passage
+});
+
+// Create a model for passages and comments in the database.
+const Passage = mongoose.model('Passage', passageSchema);
+const Comment = mongoose.model('Comment', commentSchema);
 
 // Create a new item in the database
-app.post('/api/items', async (req, res) => {
-    //TODO: adapt this for new site
-    const item = new Item({
+app.post('/api/passages/add', async (req, res) => {
+    const passage = new Passage({
         title: req.body.title,
-        description: req.body.description,
-        path: req.body.path,
+        passage: req.body.passage,
+        contributer: req.body.contributer,
     });
     try {
-        await item.save();
-        res.send(item);
+        await passage.save();
+        //What should this return?
+        res.send(passage);
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }
 });
 
-// Get a list of all of the items in the database table.
-app.get('/api/items', async (req, res) => {
+// Get a list of all of the passages in the database table.
+app.get('/api/passages', async (req, res) => {
     try {
-        let items = await Item.find();
-        res.send(items);
+        let passages = await Passage.find();
+        res.send(passages);
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
@@ -56,12 +63,11 @@ app.get('/api/items', async (req, res) => {
 });
 
 // Delete an item from the database
-app.delete('/api/items/:id', async (req, res) => {
+app.delete('/api/passages/:id', async (req, res) => {
     try {
-        //TODO: Adapt this for new site
         id = req.params.id
         console.log(id);
-        await Item.findByIdAndDelete(id);
+        await Passage.findByIdAndDelete(id);
         res.sendStatus(200);
     } catch (error) {
         console.log(error);
@@ -70,13 +76,12 @@ app.delete('/api/items/:id', async (req, res) => {
 });
 
 // Update the details of an item in the database
-app.put('/api/items/:id', async (req, res) => {
+app.put('/api/passages/:id', async (req, res) => {
     try {
-        let item = await Item.findById(req.params.id);
-        //TODO: Adapt this for new site
-        item.title = req.body.title;
-        item.description = req.body.description;
-        await item.save();
+        let passage = await Passage.findById(req.params.id);
+        passage.title = req.body.title;
+        passage.passage = req.body.description;
+        await passage.save();
         res.sendStatus(200);
     } catch (error) {
         console.log(error);
