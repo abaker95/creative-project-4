@@ -20,6 +20,9 @@ mongoose.connect('mongodb://localhost:27017/museum', {
 const passageSchema = new mongoose.Schema({
     title: String,
     passage: String,
+    author: String,
+    work: String,
+    speaker: String,
     contributer: String,
 });
 
@@ -39,6 +42,9 @@ app.post('/api/passages/add', async (req, res) => {
     const passage = new Passage({
         title: req.body.title,
         passage: req.body.passage,
+        author: req.body.author,
+        work: req.body.work,
+        speaker: req.body.speaker,
         contributer: req.body.contributer,
     });
     try {
@@ -80,7 +86,10 @@ app.put('/api/passages/:id', async (req, res) => {
     try {
         let passage = await Passage.findById(req.params.id);
         passage.title = req.body.title;
-        passage.passage = req.body.description;
+        passage.passage = req.body.passage;
+        passage.author = req.body.author;
+        passage.work = req.body.work;
+        passage.speaker = req.body.work;
         await passage.save();
         res.sendStatus(200);
     } catch (error) {

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+  <title>Manage Passages</title>
+</head>
+
+<body>
+  <div><h1 class="header">Management page for the Passage Uploader</h1></div>
+  <div id="management" class="content">
+    <button @click="toggleAdd">Add Passage</button>
+    <button @click="toggleDelete">Delete Passage</button>
+    <button @click="toggleEdit">Edit Passage</button>
+    <div v-show="addView">
+    <div class="heading">
+      <h2>Add a new Passage</h2>
+    </div>
+    <div class="add">
+      <div class="form">
+        <input v-model="title" placeholder="Title"><br>
+        <input v-model="work" placeholder="Literary Work"><br>
+        <input v-model="author" placeholder="Author"><br>
+        <input v-model="speaker" placeholder="Passage speaker"><br>
+        <textarea v-model="passage" placeholder="Passage" rows="4" cols="32"></textarea>
+        <p></p>
+        <button @click="upload">Upload</button>
+        <div class="result" v-if="modified">Successfully added the record to the database</div>
+      </div>
+
+      
+      <div class="upload" v-if="addPassage">
+        <h2>{{addPassage.title}}</h2>
+        <p>{{addPassage.passage}}</p>
+        
+        <p>Contributed by: {{addPassage.contributer}}</p>
+      </div>
+    </div>
+</div>
+
+<div v-if="(editView || delView)">
+    <div class="heading">
+      <h2 v-if="editView">Edit a Passage</h2>
+      <h2 v-if="delView">Delete a Passage</hs>
+    </div>
+    <div class="edit">
+      <div class="form">
+        <input v-model="findTitle" placeholder="Search">
+        <div class="suggestions" v-if="suggestions.length > 0">
+          <div class="suggestion" v-for="s in suggestions" @click="selectPassage(s)">{{s.title}}
+          </div>
+        </div>
+      </div>
+      <div class="upload" v-if="(findPassage && editView)">
+        <input v-model="findPassage.title" placeholder="Title"><br>
+        <input v-model="findPassage.work" placeholder="Literary Work"><br>
+        <input v-model="findPassage.author" placeholder="Author"><br>
+        <input v-model="findPassage.speaker" placeholder="Passage speaker"><br>
+        <textarea v-model="findPassage.passage" placeholder="Passage" rows="4" cols="26"></textarea>
+        <p></p>
+      </div>
+      <div class="upload" v-if="(findPassage && delView)">
+            <input v-model="findPassage.title" placeholder="Title"><br>
+            <input v-model="findPassage.work" placeholder="Literary Work"><br>
+            <textarea v-model="findPassage.passage" placeholder="Passage" rows="4" cols="26"></textarea>
+            <p></p>
+          </div>
+      <div class="actions" v-if="findPassage">
+        <button @click="deletePassage(findPassage)" v-if="delView">Delete</button>
+        <button @click="editPassage(findPassage)" v-if="editView">Edit</button>
+      </div>
+      <div class="result" v-if="(modified && delView)">Successfully deleted the record from the database</div>
+      <div class="result" v-else-if="(modified && editView)">Successfully updated the record in the database</div>
+    </div>
+    </div>
+
+  </div>
+  <div class="footer">
+    <a href="https://github.com/abaker95/creative-project-4">Github Link</a>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.7/vue.js" integrity="sha256-g+Q8DFAmG5+eyRPSydX0LY4TfjsL11XSDrIGerbbEdA="
+    crossorigin="anonymous"></script>
+  <script src="/manage.js"></script>
+</body>
+
+</html>
